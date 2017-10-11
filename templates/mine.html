@@ -1,0 +1,74 @@
+<html>
+    <head>
+        <script type="text/javascript" src="/static/js/jquery-2.1.4.min.js"></script>
+        <script type="text/javascript" src="/static/js/jquery.tsv-0.96.min.js"></script>
+        <!--Load the AJAX API-->
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+
+          // Load the Visualization API and the corechart package.
+          google.charts.load('current', {'packages':['table']});
+
+          // Set a callback to run when the Google Visualization API is loaded.
+          google.charts.setOnLoadCallback(drawChart);
+
+          // Callback that creates and populates a data table,
+          // instantiates it, passes in the data and draws it.
+          function drawChart() {
+
+            // Create the data table.
+            var data = new google.visualization.DataTable();
+            data.addColumn('date', 'dt');
+            data.addColumn('number', 'vertica-rpt');
+            data.addColumn('number', 'lga-sql-advdailystats');
+            data.addColumn('number', 'sjc-sql-advdailystats');
+            data.addColumn('number', 'lga-sql-pubdailystats');
+            data.addColumn('number', 'sjc-sql-pubdailystats');
+            data.addColumn('number', 'lga-sql-kpihourly');
+            data.addColumn('number', 'sjc-sql-kpihourly');
+            data.addColumn('number', 'lga-hive-logevent');
+            data.addColumn('number', 'sjc-hive-logevent');
+            data.addColumn('number', 'vertica-kpihourly');
+            data.addColumn('number', 'lga-hive-factlogevent');
+            data.addColumn('number', 'sjc-hive-factlogevent');
+
+            $.get(
+            "http://lga-dsd00.pulse.prod/datasetComparisonDaily",
+            function(rdata) {
+              tsv=$.tsv.parseObjects(rdata);
+              for (row in tsv) {
+                data.addRow([
+                                new Date(tsv[row].dt.substring(0,10) + "T" + "00:00:00-0500"),
+                                parseInt(tsv[row]['vertica-rpt']) || 0,
+                                parseInt(tsv[row]['vertica-widecompact']) || 0,
+                                parseInt(tsv[row]['lga-sql-advdailystats']) || 0,
+                                parseInt(tsv[row]['sjc-sql-advdailystats']) || 0,
+                                parseInt(tsv[row]['lga-sql-pubdailystats']) || 0,
+                                parseInt(tsv[row]['sjc-sql-pubdailystats']) || 0,
+                                parseInt(tsv[row]['lga-sql-kpihourly']) || 0,
+                                parseInt(tsv[row]['sjc-sql-kpihourly']) || 0,
+                                parseInt(tsv[row]['lga-hive-logevent']) || 0,
+                                parseInt(tsv[row]['sjc-hive-logevent']) || 0,
+                                parseInt(tsv[row]['vertica-kpihourly']) || 0,
+                                parseInt(tsv[row]['lga-hive-factlogevent']) || 0,
+                                parseInt(tsv[row]['sjc-hive-factlogevent']) || 0,
+                            ]);
+              }
+
+            // Set options
+            var options = { showRowNumber: true, allowHtml: true
+                            'width':1200, 'height':900};
+
+            // Instantiate and draw our chart, passing in some options.
+            var chart = new google.visualization.Table(document.getElementById('chart_div'));
+            chart.draw(data, options);
+          }
+        </script>
+
+    </head>
+
+    <body>
+        <!--Div that will hold the chart-->
+        <div id="chart_div"></div>
+    </body>
+</html>

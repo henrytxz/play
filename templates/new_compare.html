@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>Table</title>
+  <style type="text/css">
+  body { text-align: center }
+  </style>
+  <script type="text/javascript" src="/js/jquery-2.1.4.min.js"></script>
+  <script type="text/javascript" src="/js/jquery.tsv-0.96.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["table"]});
+      google.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+        var data = new google.visualization.DataTable();
+
+	// Define the schema
+	// Typically, the first column will be your x-axis
+	// Subsequent columns represent your "lines"
+
+	// Henry's notes:
+	// currently, the compare page uses google.visualization.DataTable
+	// each column is added 1 by 1, data.addColumn(type, column_name)
+	// var chart = new google.visualization.Table(document.getElementById('chart_div'));
+	// why chart_div? => not super important, the <div> tag defines a division in an HTML doc
+	//
+
+	data.addColumn('date', 'dt');
+	data.addColumn('number', 'vertica-rpt');
+	data.addColumn('number', 'lga-sql-advdailystats');
+  data.addColumn('number', 'sjc-sql-advdailystats');
+	data.addColumn('number', 'lga-sql-pubdailystats');
+  data.addColumn('number', 'sjc-sql-pubdailystats');
+	data.addColumn('number', 'lga-sql-kpihourly');
+  data.addColumn('number', 'sjc-sql-kpihourly');
+	data.addColumn('number', 'lga-hive-logevent');
+	data.addColumn('number', 'sjc-hive-logevent');
+	data.addColumn('number', 'vertica-kpihourly');
+	data.addColumn('number', 'lga-hive-factlogevent');
+	data.addColumn('number', 'sjc-hive-factlogevent');
+
+        // Some options
+        var options = {
+		showRowNumber: true,
+		allowHtml: true
+        };
+
+        var chart = new google.visualization.Table(document.getElementById('chart_div'));
+
+
+	$.get(
+		"http://lga-dsd00.pulse.prod/datasetComparisonDaily",
+		function(rdata) {
+			tsv=$.tsv.parseObjects(rdata);
+			for (row in tsv) {
+				data.addRow([
+                                    new Date(tsv[row].dt.substring(0,10) + "T" + "00:00:00-0500"),
+                                    parseInt(tsv[row]['vertica-rpt']) || 0,
+                                    parseInt(tsv[row]['vertica-widecompact']) || 0,
+                                    parseInt(tsv[row]['lga-sql-advdailystats']) || 0,
+                                    parseInt(tsv[row]['sjc-sql-advdailystats']) || 0,
+                                    parseInt(tsv[row]['lga-sql-pubdailystats']) || 0,
+                                    parseInt(tsv[row]['sjc-sql-pubdailystats']) || 0,
+                                    parseInt(tsv[row]['lga-sql-kpihourly']) || 0,
+                                    parseInt(tsv[row]['sjc-sql-kpihourly']) || 0,
+                                    parseInt(tsv[row]['lga-hive-logevent']) || 0,
+                                    parseInt(tsv[row]['sjc-hive-logevent']) || 0,
+                                    parseInt(tsv[row]['vertica-kpihourly']) || 0,
+                                    parseInt(tsv[row]['lga-hive-factlogevent']) || 0,
+                                    parseInt(tsv[row]['sjc-hive-factlogevent']) || 0,
+                                ]);
+			}
+	chart.draw(data, options);
+
+		$('tr td').each(function(){
+			// skip header
+			if ($(this).parent().index()==0) return;
+
+			if ($(this).index()>1){
+
+				cell=parseInt($(this).text().replace(/[^0-9]/g, '')) || 0;
+				tc=parseInt($(this).parent().children().filter(':nth-child(3)').text().replace(/[^0-9]/g, '')) || 0;
+
+				//if ($(this).index()==3){
+				if ($(this).index()==2){
+					$(this).css('background-color', '#ffffff');
+					return;
+				}
+
+				if (cell==0 || tc==0) {
+					$(this).css('background-color', '#aaaaaa');
+					return;
+				}
+
+				// calc percent diff from vertica rpt daily
+ 				pct_off =  ((cell)/tc);
+ 				abs_pct_off = (pct_off < 0 ? pct_off * -1 : pct_off );
+ 				abs_pct_off = abs_pct_off.toFixed(3);
+ 				abs_pct_off = abs_pct_off*100;
+
+				diff = (cell-tc);
+				diff_pct = diff*100/tc;
+				// force positive for simplicity
+				abs_diff=(diff < 0 ? diff * -1 : diff);
+
+				// green if no diff
+				if (abs_diff==0) {
+					$(this).css('background-color', '#00BB00');
+					return;
+				}
+
+				// green if no diff
+				if (abs_diff<50000) {
+					$(this).css('background-color', '#00dd00');
+					$(this).text($(this).text()+" ("+diff+" "+abs_pct_off+"%)");
+					return;
+				}
+				// yellow if < .... 1% ?
+				if (abs_diff<=500000) {
+					$(this).css('background-color', '#FFFF66');
+					$(this).text($(this).text()+" ("+diff+" "+abs_pct_off+"%)");
+					return;
+				}
+
+				$(this).css('background-color', '#FF8888');
+				$(this).text($(this).text()+" ("+diff+" "+abs_pct_off+"%)");
+			}
+		});
+
+		},
+		"text"
+		);
+
+      }
+
+    </script>
+  </head>
+  <body>
+    <div id="chart_div"></div>
+  </body>
+</html>
