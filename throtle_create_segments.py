@@ -27,36 +27,52 @@ HP for Home Price
 prefix = 'TR/'
 slash = '/'
 
-for v in ('Male', 'Female'):
-    print prefix + 'Gender' + slash + v
+g = 'G'
+ms = 'MS'
+e = 'E'
+hi = 'HI'
+r = 'R'
+a = 'A'
+hp = 'HP'
 
-for v in ('Married', 'Single'):
-    print prefix + 'Marriage Status' + slash + v
+token_prefix = 'TR_'
+underscore = '_'
+comma = ','
 
-for v in ('High School',
-          'Some College',
-          'Completed College',
-          'Graduated School'):
-    print prefix + 'Education' + slash + v
+gender_values = ('Male', 'Female')
+for v in gender_values:
+    print '{0},{1}'.format(prefix + g + slash + v, token_prefix + g + underscore + str(gender_values.index(v)))
 
-for v in ('Under $10K',
-        '10-19,999',
-        '20-29,999',
-        '30-39,999',
-        '40-49,999',
-        '50-59,999',
-        '60-69,999',
-        '70-79,999',
-        '80-89,999',
-        '90-99,999',
-        '100-149,999',
-        '150-174,999',
-        '175-199,999',
-        '200-249,999',
-        '250K+'):
-    print prefix + 'Household Income' + slash + v
+ms_values = ('Married', 'Single')
+for v in ms_values:
+    print '{0},{1}'.format(prefix + ms + slash + v, token_prefix + ms + underscore + str(ms_values.index(v)))
 
-for v in ('Asian - Unknown',
+education_values = ('High School',
+                  'Some College',
+                  'Completed College',
+                  'Graduated School')
+for v in education_values:
+    print '{0},{1}'.format(prefix + e + slash + v, token_prefix + e + underscore + str(education_values.index(v)))
+
+hi_values = ('Under $10K',
+        '10-19999',
+        '20-29999',
+        '30-39999',
+        '40-49999',
+        '50-59999',
+        '60-69999',
+        '70-79999',
+        '80-89999',
+        '90-99999',
+        '100-149999',
+        '150-174999',
+        '175-199999',
+        '200-249999',
+        '250K+')
+for v in hi_values:
+    print '{0},{1}'.format(prefix + hi + slash + v, token_prefix + hi + underscore + str(hi_values.index(v)))
+
+r_values = ('Asian - Unknown',
         'Asian - Chinese',
         'Asian - Indian',
         'Asian - Japanese',
@@ -75,20 +91,17 @@ for v in ('Asian - Unknown',
         'Caucasian - Eastern European',
         'Caucasian - Jewish',
         'Caucasian - Greek',
-        'Caucasian - Dutch'):
-    print prefix + 'Race' + slash + v
+        'Caucasian - Dutch')
+for v in r_values:
+    print '{0},{1}'.format(prefix + r + slash + v, token_prefix + r + underscore + str(r_values.index(v)))
 
-for v in range(18, 100):
-    print prefix + 'Age' + slash + str(v)
+a_values = range(18, 100)
+for v in a_values:
+    print '{0},{1}'.format(prefix + a + slash + str(v), token_prefix + a + underscore + str(v))
 
-for v in range(1, 1000):
-    print prefix + 'Home Price' + slash + str(v * 1000)
+hp_values = range(1, 1000)
+for v in hp_values:
+    print '{0},{1}'.format(prefix + hp + slash + str(v * 1000), token_prefix + hp + underscore + str(v))
 
-for attribute in ('Gender',
-                  'Marriage Status',
-                  'Education',
-                  'Household Income',
-                  'Race',
-                  'Age',
-                  'Home Price'):
-    print prefix + attribute + slash + 'Unknown'
+# for attribute in (g, ms, e, hi, r, a, hp):
+#     print prefix + attribute + slash + 'Unknown'
