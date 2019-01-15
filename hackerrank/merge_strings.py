@@ -22,4 +22,4 @@ def mergeStrings(a, b):
     return ''.join(['{0}{1}'.format(al[x], bl[x]) for x in xrange(len(al))])
 
 
-mergeStrings('abc', 'stuvwx')
+print mergeStrings('abc', 'stuvwx')
