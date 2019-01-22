@@ -22,6 +22,8 @@ HI for Household Income
 R for Race
 A for Age
 HP for Home Price
+
+A: 18-24, 29, 34, 39, 44, 49, 54, 59, 64, 65+
 """
 
 prefix = 'TR/'

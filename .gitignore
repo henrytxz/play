@@ -50,3 +50,5 @@ docs/dataflow/dataflows.svg
 *.log
 
 *.png
+
+*.js
