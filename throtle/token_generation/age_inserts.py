@@ -23,6 +23,7 @@ LOAD DATA LOCAL INPATH '/tmp/throtle_age_token_mapping.tsv' INTO TABLE reference
 brackets = ['18-24', '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55-59', '60-64', '65+']
 bracket = brackets.pop(0)
 thresholds = [25, 30, 35, 40, 45, 50, 55, 60, 65, 100]
+# divide by 5 => [5, 6, 7, 8, 9, 10, 11, 12, 13, 20]
 threshold = thresholds.pop(0)
 # print bracket, threshold
 
@@ -32,5 +33,5 @@ with open('./throtle_age.tsv', 'w') as fh:
             bracket = brackets.pop(0)
             threshold = thresholds.pop(0)
         # print "INSERT INTO reference.throtle_age_token_mapping VALUES ({0}, 'TR_A_{1}');".format(a, bracket)
-        # fh.write("{0}\tTR_A_{1}\n".format(a, bracket))
-        fh.write("TR_A_{0}\n".format(bracket))
+        fh.write("{0}\tTR_A_{1}\n".format(a, bracket))
+        # fh.write("TR_A_{0}\n".format(bracket))
