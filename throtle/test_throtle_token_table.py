@@ -33,8 +33,8 @@ def test_age_bracket():
     assert age_bracket(50) == '50-54'
     assert age_bracket(55) == '55-59'
     assert age_bracket(60) == '60-64'
-    assert age_bracket(65) == '65+'
-    assert age_bracket(99) == '65+'
+    assert age_bracket(65) == '65-plus'
+    assert age_bracket(99) == '65-plus'
     with pytest.raises(AssertionError):
         age_bracket(17)
     with pytest.raises(AssertionError):
